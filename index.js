@@ -33,7 +33,7 @@ app.get('/',function(req,res){
 })
 
 app.post('/soap_listings',async function(req,res){
-
+console.log(req.body.ingredients)
     let skinType = [];
 if (Array.isArray(req.body.skin_type)) {
     skinType = req.body.skin_type
@@ -41,19 +41,20 @@ if (Array.isArray(req.body.skin_type)) {
     skinType  = [ req.body.skin_type ]
 } 
 
-// let oilIngredient = [];
-// if (Array.isArray(req.body.ingredients.oil_ingredient)) {
-//     oilIngredient = req.body.ingredients.oil_ingredient
-// } else if (req.body.ingredients.oil_ingredient) {
-//     oilIngredient  = [ req.body.ingredients.oil_ingredient ]
-// } 
+let oilIngredient = [];
+if (Array.isArray(req.body.ingredients.oil_ingredient)) {
+    oilIngredient = req.body.ingredients.oil_ingredient
+} else if (req.body.ingredients.oil_ingredient) {
+    oilIngredient  = [ req.body.ingredients.oil_ingredient ]
+} 
 
-// let milkIngredient = [];
-// if (Array.isArray(req.body.ingredients.milk_ingredient)) {
-//     milkIngredient = req.body.ingredients.milk_ingredient
-// } else if (req.body.ingredients.milk_ingredient) {
-//     milkIngredient  = [ req.body.ingredients.milk_ingredient ]
-// } 
+let milkIngredient = [];
+if (Array.isArray(req.body.ingredients.milk_ingredient)) {
+    milkIngredient = req.body.ingredients.milk_ingredient
+} else if (req.body.ingredients.milk_ingredient) {
+    milkIngredient  = [ req.body.ingredients.milk_ingredient ]
+} 
+console.log(milkIngredient)
     
     let firstName = req.body.first_name
     let lastName = req.body.last_name
@@ -65,9 +66,11 @@ if (Array.isArray(req.body.skin_type)) {
     let cost = req.body.cost
     let estimateDelivery = req.body.estimate_delivery
     let skin_Type = skinType 
-    // let oil_Ingredient = oilIngredient
-    // let baseIngredient  = req.body.ingredients.base_ingredient
-    // let milk_Ingredient = milkIngredient
+    
+    let oil_Ingredient = req.body.ingredients.oil_ingredient
+    let baseIngredient  = req.body.ingredients.base_ingredient.split(",")
+    let milk_Ingredient = req.body.ingredients.milk_ingredient
+    let ingredients = {oil_Ingredient,baseIngredient,milk_Ingredient}
 
     
 
@@ -82,9 +85,8 @@ if (Array.isArray(req.body.skin_type)) {
         "cost":cost,
         "estimate_delivery":estimateDelivery,
         "skin_type": skin_Type,
-        // "oil_ingredient": oil_Ingredient,
-        // "base_ingredient": baseIngredient,
-        // "milk_ingredient" : milk_Ingredient
+        "ingredients": ingredients,
+   
 
     })
 
@@ -94,7 +96,7 @@ if (Array.isArray(req.body.skin_type)) {
 
 
 app.get('/soap_listings',async function(req,res){
-
+    // console.log(req.body.ingredients)
     // let skinType = [];
     // if (Array.isArray(req.query.skin_type)) {
     //     skinType = req.query.skin_type
@@ -106,7 +108,7 @@ app.get('/soap_listings',async function(req,res){
     // if (Array.isArray(req.query.ingredients.oil_ingredient)) {
     //     oilIngredient = req.query.ingredients.oil_ingredient
     // } else if (req.query.ingredients.oil_ingredient) {
-    //     oilIngredient  = [ req.query.ingredients.oil_ingredient ]
+    //     oilIngredient  = [ req.query.ingredients.oil_ingredient]
     // } 
     
     // let milkIngredient = [];
@@ -225,23 +227,23 @@ app.get('/soap_listings',async function(req,res){
         }
     }
 
-  
-//     if (req.query.ingredients.oil_ingredient) {
-//         criteria['oil_ingredient'] = {
-//             '$in': oilIngredient
-//         }
-//     }
-//     if(req.query.ingredients.base_ingredient){
-//         criteria['base_ingredient']={
-//             '$regex':req.query.soap_label,'$options':'i'
-//         }
-//     }
+//   console.log(req.query.ingredients.oil_ingredient)
+    if (req.query.ingredients.oil_ingredient) {
+        criteria['oil_ingredient'] = {
+            '$regex':req.query.ingredients.oil_ingredient,'$options':'i'
+        }
+    }
+    if(req.query.ingredients.base_ingredient){
+        criteria['base_ingredient']={
+            '$regex':req.query.ingredients.base_ingredient,'$options':'i'
+        }
+    }
 
-//     if (req.query.ingredients.milk_ingredient) {
-//         criteria['oil_ingredient'] = {
-//             '$in': milkIngredient
-//         }
-//     }
+    if (req.query.ingredients.milk_ingredient) {
+        criteria['milk_ingredient'] = {
+            '$regex':req.query.ingredients.milk_ingredient,'$options':'i'
+        }
+    }
 
     let results = await db.collection(SOAP).find(criteria)
     res.status(200)
