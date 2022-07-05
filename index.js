@@ -41,26 +41,27 @@ if (Array.isArray(req.body.skin_type)) {
     skinType  = [ req.body.skin_type ]
 } 
 
-let oilIngredient = [];
-if (Array.isArray(req.body.ingredients.oil_ingredient)) {
-    oilIngredient = req.body.ingredients.oil_ingredient
-} else if (req.body.ingredients.oil_ingredient) {
-    oilIngredient  = [ req.body.ingredients.oil_ingredient ]
-} 
+// let oilIngredient = [];
+// if (Array.isArray(req.body.ingredients.oil_ingredient)) {
+//     oilIngredient = req.body.ingredients.oil_ingredient
+// } else if (req.body.ingredients.oil_ingredient) {
+//     oilIngredient  = [ req.body.ingredients.oil_ingredient ]
+// } 
 
-let milkIngredient = [];
-if (Array.isArray(req.body.ingredients.milk_ingredient)) {
-    milkIngredient = req.body.ingredients.milk_ingredient
-} else if (req.body.ingredients.milk_ingredient) {
-    milkIngredient  = [ req.body.ingredients.milk_ingredient ]
-} 
-console.log(milkIngredient)
+// let milkIngredient = [];
+// if (Array.isArray(req.body.ingredients.milk_ingredient)) {
+//     milkIngredient = req.body.ingredients.milk_ingredient
+// } else if (req.body.ingredients.milk_ingredient) {
+//     milkIngredient  = [ req.body.ingredients.milk_ingredient ]
+// } 
+// console.log(milkIngredient)
     
-    let firstName = req.body.first_name
-    let lastName = req.body.last_name
+   
+    let name = req.body.name
     let email = req.body.email
     let contactNo = req.body.contact_no
     let soapLabel = req.body.soap_label
+    let imageUrl = req.body.image_url
     let color = req.body.color
     let countryOrigin = req.body.country_origin
     let cost = req.body.cost
@@ -72,20 +73,26 @@ console.log(milkIngredient)
     let milk_Ingredient = req.body.ingredients.milk_ingredient
     let ingredients = {oil_Ingredient,baseIngredient,milk_Ingredient}
 
+  
+    let treat = req.body.suitability.treat
+    let recommended_use = req.body.suitability.recommended_use
+    let datePosted = req.body.suitability.date_posted
+    let suitability = {treat,recommended_use,datePosted}
     
 
     let result = await db.collection(SOAP).insertOne({
-        "first_name" : firstName,
-        "last_name": lastName,
+        "name" : name,
         "email":email,
         "contact_no":contactNo,
         "soap_label" :soapLabel,
+        "image_url" :imageUrl,
         "color":color,
         "country_origin": countryOrigin,
         "cost":cost,
         "estimate_delivery":estimateDelivery,
         "skin_type": skin_Type,
         "ingredients": ingredients,
+        "suitability": suitability
    
 
     })
@@ -121,21 +128,21 @@ app.get('/soap_listings',async function(req,res){
 
 
     let criteria = {};
-    if(req.query.first_name){
+    //name
+    if(req.query.name){
         criteria['first_name']={
-            '$regex':req.query.first_name,'$options':'i'
+            '$regex':req.query.name,'$options':'i'
         }
     }
-    if(req.query.last_name){
-        criteria['last_name']={
-            '$regex':req.query.last_name,'$options':'i'
-        }
-    }
+
+    //email
     if(req.query.email){
         criteria['email']={
             '$regex':req.query.email,'$options':'i'
         }
     }
+
+    //contact no
     if(req.query.contact_no){
         criteria['contact_no']={
             '$regex':req.query.contact_no,'$options':'i'
@@ -146,24 +153,34 @@ app.get('/soap_listings',async function(req,res){
             }
         }
     }
+    //soap
     if(req.query.soap_label){
         criteria['soap_label']={
             '$regex':req.query.soap_label,'$options':'i'
         }
     }
+  // image_url
+    if(req.query.image_url){
+        criteria['image_url']={
+            '$regex':req.query.image_url,'$options':'i'
+        }
+    }
+    //colour
     if(req.query.color){
         criteria['color']={
             '$regex':req.query.color,'$options':'i'
         }
     }
-
+  //country_origin
     if(req.query.country_origin){
         criteria['country_origin']={
             '$regex':req.query.country_origin,'$options':'i'
         }
     }
+
+    // cost
     if(req.query.cost){
-        if(req.query.cost == '10 dollars per piece'){
+        if(req.query.cost == 10){
         criteria['cost']={
             '$lte': 10,
           
@@ -171,7 +188,7 @@ app.get('/soap_listings',async function(req,res){
     }
     }
     if(req.query.cost){
-        if(req.query.cost == '20 dollars per piece'){
+        if(req.query.cost == 20){
         criteria['cost']={
             '$lte': 20,
             
@@ -179,13 +196,15 @@ app.get('/soap_listings',async function(req,res){
     }
     }
     if(req.query.cost){
-        if(req.query.cost == '30 dollars per piece'){
+        if(req.query.cost == 30){
         criteria['cost']={
             '$lte': 30,
             
         }
     }
     }
+
+    // estimated_delivery
     if(req.query.estimate_delivery){
         if(req.query.estimate_delivery == 'less than 1 week'){
         criteria['estimate_delivery']={
@@ -211,7 +230,7 @@ app.get('/soap_listings',async function(req,res){
     }
     }
   
-      
+ // skin type
     if(req.query.skin_type){
         criteria['skin_type']={
             '$or':[
@@ -227,29 +246,119 @@ app.get('/soap_listings',async function(req,res){
         }
     }
 
+//ingredients
+// console.log(req.query.oil_ingredient)
+// console.log(req.query.stuff)
 //   console.log(req.query.ingredients.oil_ingredient)
-    if (req.query.ingredients.oil_ingredient) {
+    if (req.query.oil_ingredient) {
         criteria['oil_ingredient'] = {
-            '$regex':req.query.ingredients.oil_ingredient,'$options':'i'
+            '$regex':req.query.oil_ingredient,'$options':'i'
         }
     }
-    if(req.query.ingredients.base_ingredient){
+    if(req.query.base_ingredient){
         criteria['base_ingredient']={
-            '$regex':req.query.ingredients.base_ingredient,'$options':'i'
+            '$regex':req.query.base_ingredient,'$options':'i'
         }
     }
 
-    if (req.query.ingredients.milk_ingredient) {
+    if (req.query.milk_ingredient) {
         criteria['milk_ingredient'] = {
-            '$regex':req.query.ingredients.milk_ingredient,'$options':'i'
+            '$regex':req.query.milk_ingredient,'$options':'i'
         }
     }
 
+   // suitability
+    if (req.query.treat) {
+        criteria['treat'] = {
+            '$regex':req.query.treat,'$options':'i'
+        }
+    }
+    if (req.query.recommended_use) {
+        criteria['treat'] = {
+            '$regex':req.query.recommended_use,'$options':'i'
+        }
+    }
+    if (req.query.date_posted) {
+        criteria['treat'] = {
+            '$regex':req.query.date_posted,'$options':'i'
+        }
+    }
     let results = await db.collection(SOAP).find(criteria)
     res.status(200)
     //toArray is async
     res.send( await results.toArray())
 })
+
+
+
+
+
+//update 
+// patch vs put 
+app.put('/soap_listings/:id',async function(req,res){
+
+    let skinType = [];
+    if (Array.isArray(req.body.skin_type)) {
+        skinType = req.body.skin_type
+    } else if (req.body.skin_type) {
+        skinType  = [ req.body.skin_type ]
+    } 
+   
+    let name = req.body.name
+    let email = req.body.email
+    let contactNo = req.body.contact_no
+    let soapLabel = req.body.soap_label
+    let imageUrl = req.body.image_url
+    let color = req.body.color
+    let countryOrigin = req.body.country_origin
+    let cost = req.body.cost
+    let estimateDelivery = req.body.estimate_delivery
+    let skin_Type = skinType 
+    
+    let oil_Ingredient = req.body.ingredients.oil_ingredient
+    let baseIngredient  = req.body.ingredients.base_ingredient.split(",")
+    let milk_Ingredient = req.body.ingredients.milk_ingredient
+    let ingredients = {oil_Ingredient,baseIngredient,milk_Ingredient}
+
+  
+    let treat = req.body.suitability.treat
+    let recommended_use = req.body.suitability.recommended_use
+    let datePosted = req.body.suitability.date_posted ? new Date(req.body.suitability.date_posted ) : new Date();
+    let suitability = {treat,recommended_use,datePosted}
+    
+  
+    let results = await db.collection(SOAP).updateOne({
+        '_id' : ObjectId(req.params.id)
+    },{
+        '$set':{
+            "name" : name,
+            "email":email,
+            "contact_no":contactNo,
+            "soap_label" :soapLabel,
+            "image_url" :imageUrl,
+            "color":color,
+            "country_origin": countryOrigin,
+            "cost":cost,
+            "estimate_delivery":estimateDelivery,
+            "skin_type": skin_Type,
+            "ingredients": ingredients,
+            "suitability": suitability
+        }
+    })
+    res.status(200);
+        res.json(results);
+})
+
+// delete
+app.delete('/soap_listings/:id', async function(req,res){
+    let results = await db.collection('sightings').deleteOne({
+        '_id':ObjectId(req.params.id)
+    })
+
+    res.status(200);
+    res.json({'status':'ok'});
+})
+
 
 }
 
