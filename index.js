@@ -173,7 +173,7 @@ async function main() {
                 })
 
                    res.status(201);
-                   res.json("sucessful");
+                   res.json(result);
                 // db insert
                 // success
             }
