@@ -344,7 +344,7 @@ async function main() {
         // skin type
         if (req.query.skin_type) {
             criteria['skin_type'] = {
-                '$in': ['sensitive', 'dry']
+                '$in': ['sensitive', 'dry', 'oily', 'cracked']
             }
             // criteria['skin_type'] = {
             //     '$or': [
@@ -389,12 +389,12 @@ async function main() {
             }
         }
         if (req.query.recommended_use) {
-            criteria['treat'] = {
+            criteria['recommended_use'] = {
                 '$regex': req.query.recommended_use, '$options': 'i'
             }
         }
         if (req.query.date_posted) {
-            criteria['treat'] = {
+            criteria['date_posted'] = {
                 '$regex': req.query.date_posted, '$options': 'i'
             }
 
