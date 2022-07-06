@@ -76,7 +76,7 @@ async function main() {
             let skin_Type = skinType
 
             let oil_Ingredient = req.body.ingredients.oil_ingredient
-            let baseIngredient = req.body.ingredients.base_ingredient.split(",")
+            let baseIngredient = req.body.ingredients.base_ingredient
             let milk_Ingredient = req.body.ingredients.milk_ingredient
             let ingredients = { oil_Ingredient, baseIngredient, milk_Ingredient }
 
@@ -84,22 +84,96 @@ async function main() {
             let treat = req.body.suitability.treat
             let recommended_use = req.body.suitability.recommended_use
             let datePosted = req.body.suitability.date_posted
-            let suitability = { treat, recommended_use, datePosted}
-            
+            let suitability = { treat, recommended_use, datePosted }
+
             let errorMsg = [];
 
-            if(name.length < 3 || typeof(name) === "number"){
-                errorMsg.push({"name": name + " is invalid"});
-            } 
+            if (name && name.length < 3 || typeof (name) === "number") {
+                errorMsg.push({ "name": name + " is invalid" });
+            }
 
-            if(email.length < 3 || typeof(email) !== "string"){
-                errorMsg.push({"email": email + " is invalid"})
+            if (email && email.length < 3 || typeof (email) !== "string") {
+                errorMsg.push({ "email": email + " is invalid" })
+            }
+            else if (email && !email.includes('@')) {
+                errorMsg.push({ "email": email + " is invalid" })
+            }
+
+            if (soapLabel && typeof (soapLabel) !== "string") {
+                errorMsg.push({ "soap_label": soapLabel + " is invalid" })
+            }
+
+            // if (imageUrl !== null || typeof (imageUrl) !== "string") {
+            //     errorMsg.push({ "image_url": imageUrl + " is invalid" })
+            // }
+
+            if (color && typeof (color) !== "object") {
+                errorMsg.push({ "color": color + " is invalid" })
+            }
+
+            if (countryOrigin && typeof (countryOrigin) !== "string") {
+                errorMsg.push({ "color": color + " is invalid" })
+            }
+            if (estimateDelivery && typeof (estimateDelivery) !== "string") {
+                errorMsg.push({ "estimate_delivery": estimateDelivery + " is invalid" })
+            }
+
+            if (skin_Type && typeof (skin_Type) !== "object") {
+                errorMsg.push({ "skin_type": skin_Type + " is invalid" })
             }
             
 
+            if (oil_Ingredient && typeof (oil_Ingredient) !== "object") {
+                errorMsg.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
+            }
+
+            if ( baseIngredient && typeof (baseIngredient) !== "object") {
+                errorMsg.push({ "baseIngredient": baseIngredient + " is invalid" })
+            }
+            
+            if (milk_Ingredient && typeof (milk_Ingredient) !== "string") {
+                errorMsg.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
+            }
+
+            if ((treat && typeof (treat) !== "object")){
+                errorMsg.push({ "treat": treat + " is invalid" })
+            }
+
+            if (recommended_use && typeof (recommended_use) !== "string"){
+                errorMsg.push({ "recommended_use": recommended_use + " is invalid" })
+            }
+            
+            if (datePosted && typeof (datePosted) !== "string"){
+                errorMsg.push({ "datePosted": datePosted + " is invalid" })
+            }
+            
+            
+
+
             if (errorMsg && errorMsg.length > 0) {
-                res.status(406).json({"Errors": errorMsg});
+                res.status(406).json({ "Errors": errorMsg });
             } else {
+
+
+                let result = await db.collection(SOAP).insertOne({
+                    "name": name,
+                    "email": email,
+                    "contact_no": contactNo,
+                    "soap_label": soapLabel,
+                    "image_url": imageUrl,
+                    "color": color,
+                    "country_origin": countryOrigin,
+                    "cost": cost,
+                    "estimate_delivery": estimateDelivery,
+                    "skin_type": skin_Type,
+                    "ingredients": ingredients,
+                    "suitability": suitability
+    
+    
+                })
+
+                   res.status(201);
+                   res.json("sucessful");
                 // db insert
                 // success
             }
@@ -107,7 +181,7 @@ async function main() {
             // if(name.length < 3 || typeof(name) === "number"){
             //     res.status(400).send('Name error')
             // } 
-            
+
             // // if(email.length < 3 || typeof(email) !== "string"){
             // //     res.status(400).send('email error')
             // // }
@@ -117,21 +191,11 @@ async function main() {
             // // }
             // else if( contactNo && typeof(contactNo) !== "string"){
             //     res.status(400).send('Contact_no error')
-               
-            // } 
-            
-            // else if(soapLabel.length < 3 || typeof(soapLabel) !== "string"){
-            //     res.status(400).send('Soap Label error')
-               
-            // } 
-            // else if(imageUrl && typeof(imageUrl) !== "string"){
-            //     res.status(400).send('imageUrl')
-            // }
 
-            // else if(color && typeof(color) !== "object"){
+            // } 
 
-            // }
-            
+
+
             // else{
             //     res.status(201)
             //     res.send("success")
@@ -140,7 +204,7 @@ async function main() {
 
             // if(name.length < 3){
             //     res.status(400).send('message error')
-               
+
             // }else{
             //     res.status(201)
             //     res.send("success")
@@ -148,28 +212,9 @@ async function main() {
 
 
 
-            // let result = await db.collection(SOAP).insertOne({
-            //     "name": name,
-            //     "email": email,
-            //     "contact_no": contactNo,
-            //     "soap_label": soapLabel,
-            //     "image_url": imageUrl,
-            //     "color": color,
-            //     "country_origin": countryOrigin,
-            //     "cost": cost,
-            //     "estimate_delivery": estimateDelivery,
-            //     "skin_type": skin_Type,
-            //     "ingredients": ingredients,
-            //     "suitability": suitability
-
-
-            // })
-
-        
-
-        } catch (e) {
+        } catch (e){
             res.status(500)
-            res.send("Internal Server error")
+            res.json("Internal Server error")
         }
     })
 
@@ -201,7 +246,7 @@ async function main() {
         let criteria = {};
         //name
         if (req.query.name) {
-            criteria['first_name'] = {
+            criteria['name'] = {
                 '$regex': req.query.name, '$options': 'i'
             }
         }
@@ -218,11 +263,11 @@ async function main() {
             criteria['contact_no'] = {
                 '$regex': req.query.contact_no, '$options': 'i'
             }
-                , {
-                'projection': {
-                    'contact_no': 1
-                }
-            }
+            //     , {
+            //     'projection': {
+            //         'contact_no': 1
+            //     }
+            // }
         }
         //soap
         if (req.query.soap_label) {
@@ -253,14 +298,14 @@ async function main() {
         // min cost
         // max cost
         if (req.query.min_cost) {
-                criteria['cost'] = {
-                    '$gte': req.query.min_cost,
-                }
+            criteria['cost'] = {
+                '$gte': req.query.min_cost,
+            }
         }
         if (req.query.max_cost) {
-                criteria['cost'] = {
-                    '$lte': req.query.max_cost,
-                }
+            criteria['cost'] = {
+                '$lte': req.query.max_cost,
+            }
         }
         // if (req.query.cost) {
         //     if (req.query.cost == 30) {
@@ -283,7 +328,7 @@ async function main() {
             if (req.query.estimate_delivery == 'less than 2 weeks') {
                 criteria['estimate_delivery'] = {
                     '$lte': 2,
-                    
+
                 }
             }
         }
@@ -291,7 +336,7 @@ async function main() {
             if (req.query.estimate_delivery == 'less than 3 weeks') {
                 criteria['estimate_delivery'] = {
                     '$lte': 3,
-                    
+
                 }
             }
         }
@@ -354,10 +399,21 @@ async function main() {
             }
 
         }
-        let results = await db.collection(SOAP).find(criteria, 
+        let results = await db.collection(SOAP).find(criteria,
             {
                 'projection': {
-                    'skin_type': 1
+                    'name': 1,
+                    "email": 1,
+                    "contact_no": 1,
+                    "soap_label": 1,
+                    "image_url": 1,
+                    "color": 1,
+                    "country_origin": 1,
+                    "cost": 1,
+                    "estimate_delivery": 1,
+                    "skin_type":1,
+                    "ingredients": 1,
+                    "suitability": 1
                 }
             })
         res.status(200)
