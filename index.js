@@ -84,31 +84,58 @@ async function main() {
             let treat = req.body.suitability.treat
             let recommended_use = req.body.suitability.recommended_use
             let datePosted = req.body.suitability.date_posted
-            let suitability = { treat, recommended_use, datePosted }
-    
+            let suitability = { treat, recommended_use, datePosted}
+            
+            let errorMsg = [];
+
             if(name.length < 3 || typeof(name) === "number"){
-                res.status(400).send('Name error')
-               
-            }else{
-                res.status(201)
-                res.send("success")
+                errorMsg.push({"name": name + " is invalid"});
+            } 
+
+            if(email.length < 3 || typeof(email) !== "string"){
+                errorMsg.push({"email": email + " is invalid"})
             }
             
-            if(email.length < 3 || typeof(name) === "number"){
-                res.status(400).send('email error')
-               
-            }else{
-                res.status(201)
-                res.send("success")
+
+            if (errorMsg && errorMsg.length > 0) {
+                res.status(406).json({"Errors": errorMsg});
+            } else {
+                // db insert
+                // success
             }
 
-            if(contactNo.length < 9 || typeof(contactNo) === "string"){
-                res.status(400).send('Name error')
+            // if(name.length < 3 || typeof(name) === "number"){
+            //     res.status(400).send('Name error')
+            // } 
+            
+            // // if(email.length < 3 || typeof(email) !== "string"){
+            // //     res.status(400).send('email error')
+            // // }
+
+            // // if (email && !email.includes('@')) {
+            // //     res.status(400).send('email error')
+            // // }
+            // else if( contactNo && typeof(contactNo) !== "string"){
+            //     res.status(400).send('Contact_no error')
                
-            }else{
-                res.status(201)
-                res.send("success")
-            }
+            // } 
+            
+            // else if(soapLabel.length < 3 || typeof(soapLabel) !== "string"){
+            //     res.status(400).send('Soap Label error')
+               
+            // } 
+            // else if(imageUrl && typeof(imageUrl) !== "string"){
+            //     res.status(400).send('imageUrl')
+            // }
+
+            // else if(color && typeof(color) !== "object"){
+
+            // }
+            
+            // else{
+            //     res.status(201)
+            //     res.send("success")
+            // }
 
 
             // if(name.length < 3){
@@ -223,37 +250,32 @@ async function main() {
         }
 
         // cost
-        if (req.query.cost) {
-            if (req.query.cost == 10) {
+        // min cost
+        // max cost
+        if (req.query.min_cost) {
                 criteria['cost'] = {
-                    '$lte': 10,
-
+                    '$gte': req.query.min_cost,
                 }
-            }
         }
-        if (req.query.cost) {
-            if (req.query.cost == 20) {
+        if (req.query.max_cost) {
                 criteria['cost'] = {
-                    '$lte': 20,
-
+                    '$lte': req.query.max_cost,
                 }
-            }
         }
-        if (req.query.cost) {
-            if (req.query.cost == 30) {
-                criteria['cost'] = {
-                    '$lte': 30,
+        // if (req.query.cost) {
+        //     if (req.query.cost == 30) {
+        //         criteria['cost'] = {
+        //             '$lte': 30,
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         // estimated_delivery
         if (req.query.estimate_delivery) {
             if (req.query.estimate_delivery == 'less than 1 week') {
                 criteria['estimate_delivery'] = {
-                    '$lte': 1,
-                    '$gte': 0
+                    '$lte': 1
                 }
             }
         }
@@ -261,7 +283,7 @@ async function main() {
             if (req.query.estimate_delivery == 'less than 2 weeks') {
                 criteria['estimate_delivery'] = {
                     '$lte': 2,
-                    '$gte': 0
+                    
                 }
             }
         }
@@ -269,7 +291,7 @@ async function main() {
             if (req.query.estimate_delivery == 'less than 3 weeks') {
                 criteria['estimate_delivery'] = {
                     '$lte': 3,
-                    '$gte': 0
+                    
                 }
             }
         }
@@ -277,17 +299,21 @@ async function main() {
         // skin type
         if (req.query.skin_type) {
             criteria['skin_type'] = {
-                '$or': [
-                    { 'skin_type': 'sensitive' },
-                    { 'skin_type': 'dry' },
-                    { 'skin_type': 'oily' },
-                    { 'skin_type': 'cracked' },
-                ]
-            }, {
-                'projection': {
-                    'skin_type': 1
-                }
+                '$in': ['sensitive', 'dry']
             }
+            // criteria['skin_type'] = {
+            //     '$or': [
+            //         { 'skin_type': 'sensitive' },
+            //         { 'skin_type': 'dry' },
+            //         { 'skin_type': 'oily' },
+            //         { 'skin_type': 'cracked' },
+            //     ]
+            // }
+            // , {
+            //     'projection': {
+            //         'skin_type': 1
+            //     }
+            // }
         }
 
         //ingredients
@@ -328,7 +354,12 @@ async function main() {
             }
 
         }
-        let results = await db.collection(SOAP).find(criteria)
+        let results = await db.collection(SOAP).find(criteria, 
+            {
+                'projection': {
+                    'skin_type': 1
+                }
+            })
         res.status(200)
         //toArray is async
         res.send(await results.toArray())
