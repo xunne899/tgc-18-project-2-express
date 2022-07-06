@@ -427,7 +427,7 @@ async function main() {
 
     //update 
     // patch vs put 
-    app.put('/soap_listings/:id', async function (req, res) {
+    app.put('/soap_listings/:id', async function (req,res) {
 
         let skinType = [];
         if (Array.isArray(req.body.skin_type)) {
@@ -448,7 +448,7 @@ async function main() {
         let skin_Type = skinType
 
         let oil_Ingredient = req.body.ingredients.oil_ingredient
-        let baseIngredient = req.body.ingredients.base_ingredient.split(",")
+        let baseIngredient = req.body.ingredients.base_ingredient
         let milk_Ingredient = req.body.ingredients.milk_ingredient
         let ingredients = { oil_Ingredient, baseIngredient, milk_Ingredient }
 
