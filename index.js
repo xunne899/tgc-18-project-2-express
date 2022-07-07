@@ -343,6 +343,7 @@ async function main() {
 
         // skin type
         if (req.query.skin_type) {
+            // criteria["$and"] = req.query.skin_type.map(type => { return {"skin_type" : { "$in": [type] }}})
             criteria['skin_type'] = {
                 '$in': ['sensitive', 'dry', 'oily', 'cracked']
             }
@@ -385,7 +386,7 @@ async function main() {
         // suitability
         if (req.query.treat) {
             criteria['treat'] = {
-                '$regex': req.query.treat, '$options': 'i'
+                '$in': [req.query.treat]
             }
         }
         if (req.query.recommended_use) {
