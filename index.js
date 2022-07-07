@@ -72,7 +72,7 @@ async function main() {
             let color = req.body.color
             let countryOrigin = req.body.country_origin
             let cost = req.body.cost
-            let estimateDelivery = req.body.estimate_delivery
+            // let estimateDelivery = req.body.estimate_delivery
             let skin_Type = skinType
 
             let oil_Ingredient = req.body.ingredients.oil_ingredient
@@ -114,9 +114,9 @@ async function main() {
             if (countryOrigin && typeof (countryOrigin) !== "string") {
                 errorMsg.push({ "color": color + " is invalid" })
             }
-            if (estimateDelivery && typeof (estimateDelivery) !== "string") {
-                errorMsg.push({ "estimate_delivery": estimateDelivery + " is invalid" })
-            }
+            // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
+            //     errorMsg.push({ "estimate_delivery": estimateDelivery + " is invalid" })
+            // }
 
             if (skin_Type && typeof (skin_Type) !== "object") {
                 errorMsg.push({ "skin_type": skin_Type + " is invalid" })
@@ -164,7 +164,7 @@ async function main() {
                     "color": color,
                     "country_origin": countryOrigin,
                     "cost": cost,
-                    "estimate_delivery": estimateDelivery,
+                    // "estimate_delivery": estimateDelivery,
                     "skin_type": skin_Type,
                     "ingredients": ingredients,
                     "suitability": suitability
@@ -297,14 +297,19 @@ async function main() {
         // cost
         // min cost
         // max cost
-        if (req.query.min_cost) {
+       
+        if (req.query.min_cost && req.query.max_cost) {
             criteria['cost'] = {
-                '$gte': req.query.min_cost,
+                '$gte': parseInt(req.query.min_cost),
+                '$lte': parseInt(req.query.max_cost),
             }
-        }
-        if (req.query.max_cost) {
+        } else if (req.query.min_cost) {
             criteria['cost'] = {
-                '$lte': req.query.max_cost,
+                '$gte': parseInt(req.query.min_cost),
+            }
+        } else if (req.query.max_cost) {
+            criteria['cost'] = {
+                '$lte': parseInt(req.query.max_cost),
             }
         }
         // if (req.query.cost) {
@@ -317,36 +322,38 @@ async function main() {
         // }
 
         // estimated_delivery
-        if (req.query.estimate_delivery) {
-            if (req.query.estimate_delivery == 'less than 1 week') {
-                criteria['estimate_delivery'] = {
-                    '$lte': 1
-                }
-            }
-        }
-        if (req.query.estimate_delivery) {
-            if (req.query.estimate_delivery == 'less than 2 weeks') {
-                criteria['estimate_delivery'] = {
-                    '$lte': 2,
+        // if (req.query.estimate_delivery) {
+        //     if (req.query.estimate_delivery == 1) {
+        //         criteria['estimate_delivery'] = {
+        //             '$lte': 1
+        //         }
+        //     }
+        // }
+        // if (req.query.estimate_delivery) {
+        //     if (req.query.estimate_delivery == 'less than 2 weeks') {
+        //         criteria['estimate_delivery'] = {
+        //             '$lte': 2,
+                    
 
-                }
-            }
-        }
-        if (req.query.estimate_delivery) {
-            if (req.query.estimate_delivery == 'less than 3 weeks') {
-                criteria['estimate_delivery'] = {
-                    '$lte': 3,
+        //         }
+        //     }
+        // }
+        // if (req.query.estimate_delivery) {
+        //     if (req.query.estimate_delivery == 'less than 3 weeks') {
+        //         criteria['estimate_delivery'] = {
+        //             '$lte': 3,
+                    
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         // skin type
         if (req.query.skin_type) {
             criteria["$and"] = req.query.skin_type.map(type =>{ return {"skin_type" : { "$in": [type] }}})
-            criteria['skin_type'] = {
-                '$in': ['sensitive', 'dry', 'oily', 'cracked']
-            }
+            // criteria['skin_type'] = {
+            //     '$in': ['sensitive', 'dry', 'oily', 'cracked']
+            // }
 
 
 
@@ -403,6 +410,59 @@ async function main() {
             }
 
         }
+
+
+
+        if (req.query.search) {
+            criteria['$or'] = [
+
+                {
+                    'name': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'email': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'ingredients': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'color': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'suitability': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'cost': {
+                        '$gte': parseInt(req.query.search),
+                        '$lte': parseInt(req.query.search),
+                    }
+                },
+                {
+                    'country_origin': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                }
+              
+              
+            ]
+        };
+
         let results = await db.collection(SOAP).find(criteria,
             {
                 'projection': {
@@ -414,7 +474,7 @@ async function main() {
                     "color": 1,
                     "country_origin": 1,
                     "cost": 1,
-                    "estimate_delivery": 1,
+                    // "estimate_delivery": 1,
                     "skin_type":1,
                     "ingredients": 1,
                     "suitability": 1
@@ -448,7 +508,7 @@ async function main() {
         let color = req.body.color
         let countryOrigin = req.body.country_origin
         let cost = req.body.cost
-        let estimateDelivery = req.body.estimate_delivery
+        // let estimateDelivery = req.body.estimate_delivery
         let skin_Type = skinType
 
         let oil_Ingredient = req.body.ingredients.oil_ingredient
@@ -475,7 +535,7 @@ async function main() {
                 "color": color,
                 "country_origin": countryOrigin,
                 "cost": cost,
-                "estimate_delivery": estimateDelivery,
+                // "estimate_delivery": estimateDelivery,
                 "skin_type": skin_Type,
                 "ingredients": ingredients,
                 "suitability": suitability
