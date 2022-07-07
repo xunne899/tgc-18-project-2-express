@@ -343,10 +343,13 @@ async function main() {
 
         // skin type
         if (req.query.skin_type) {
-            // criteria["$and"] = req.query.skin_type.map(type => { return {"skin_type" : { "$in": [type] }}})
+            criteria["$and"] = req.query.skin_type.map(type =>{ return {"skin_type" : { "$in": [type] }}})
             criteria['skin_type'] = {
                 '$in': ['sensitive', 'dry', 'oily', 'cracked']
             }
+
+
+
             // criteria['skin_type'] = {
             //     '$or': [
             //         { 'skin_type': 'sensitive' },
