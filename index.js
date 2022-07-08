@@ -17,10 +17,7 @@ app.use(express.json());
 const SOAP = "soaps";
 
 
-// function Arr( a) {
-//     let newArr = a || []; // if null, set as empty list
-//     return Array.isArray(newArr) ? newArr : [newArr]; // if at least 1 element, make it into array
-// }
+
 
 
 
@@ -32,7 +29,6 @@ async function main() {
     app.get('/', function (req, res) {
         res.send("hello world")
     })
-
 
 
 
@@ -291,6 +287,7 @@ async function main() {
 
 
         let criteria = {};
+       
         //name
         if (req.query.name) {
             criteria['name'] = {
@@ -596,6 +593,36 @@ async function main() {
         //toArray is async
         res.send(await results.toArray())
     })
+
+// get doc field id
+    app.get('/soap_listings/:id', async function (req, res) {
+        let results = await db.collection(SOAP).findOne({
+            '_id': ObjectId(req.params.id)
+        },         {
+            'projection': {
+                // '_id': ObjectId(req.params.id),
+                'name': 1,
+                "email": 1,
+                "contact_no": 1,
+                "soap_label": 1,
+                "image_url": 1,
+                "color": 1,
+                "country_origin": 1,
+                "cost": 1,
+                // "estimate_delivery": 1,
+                "skin_type": 1,
+                "ingredients": 1,
+                "suitability": 1,
+                "comments":1,
+                
+            }
+        
+    })
+
+    res.status(200)
+
+    res.send(results)
+})
 
 
 
