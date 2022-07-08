@@ -86,72 +86,75 @@ async function main() {
             let datePosted = req.body.suitability.date_posted
             let suitability = { treat, recommended_use, datePosted }
 
-            let errorMsg = [];
+            let msgError = [];
 
             if (name && name.length < 3 || typeof (name) === "number") {
-                errorMsg.push({ "name": name + " is invalid" });
+                msgError.push({ "name": name + " is invalid" });
             }
 
             if (email && email.length < 3 || typeof (email) !== "string") {
-                errorMsg.push({ "email": email + " is invalid" })
+                msgError.push({ "email": email + " is invalid" })
             }
             else if (email && !email.includes('@')) {
-                errorMsg.push({ "email": email + " is invalid" })
+                msgError.push({ "email": email + " is invalid" })
             }
 
             if (soapLabel && typeof (soapLabel) !== "string") {
-                errorMsg.push({ "soap_label": soapLabel + " is invalid" })
+                msgError.push({ "soap_label": soapLabel + " is invalid" })
             }
 
-            // if (imageUrl !== null || typeof (imageUrl) !== "string") {
-            //     errorMsg.push({ "image_url": imageUrl + " is invalid" })
+            // if ( imageUrl !== null || typeof (imageUrl) !== "string") {
+            //     msgError.push({ "image_url": imageUrl + " is invalid" })
             // }
+            if (imageUrl !== null && !imageUrl.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+                msgError.push({ image_url: `${imageUrl} is an invalid url` });
+            }
 
             if (color && typeof (color) !== "object") {
-                errorMsg.push({ "color": color + " is invalid" })
+                msgError.push({ "color": color + " is invalid" })
             }
 
             if (countryOrigin && typeof (countryOrigin) !== "string") {
-                errorMsg.push({ "color": color + " is invalid" })
+                msgError.push({ "color": color + " is invalid" })
             }
             // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
-            //     errorMsg.push({ "estimate_delivery": estimateDelivery + " is invalid" })
+            //     msgError.push({ "estimate_delivery": estimateDelivery + " is invalid" })
             // }
 
             if (skin_Type && typeof (skin_Type) !== "object") {
-                errorMsg.push({ "skin_type": skin_Type + " is invalid" })
+                msgError.push({ "skin_type": skin_Type + " is invalid" })
             }
             
 
             if (oil_Ingredient && typeof (oil_Ingredient) !== "object") {
-                errorMsg.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
+                msgError.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
             }
 
-            if ( baseIngredient && typeof (baseIngredient) !== "object") {
-                errorMsg.push({ "baseIngredient": baseIngredient + " is invalid" })
+            if ( baseIngredient && typeof (baseIngredient) !== "string") {
+                msgError.push({ "baseIngredient": baseIngredient + " is invalid" })
             }
             
             if (milk_Ingredient && typeof (milk_Ingredient) !== "string") {
-                errorMsg.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
+                msgError.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
             }
 
             if ((treat && typeof (treat) !== "object")){
-                errorMsg.push({ "treat": treat + " is invalid" })
+                msgError.push({ "treat": treat + " is invalid" })
             }
 
             if (recommended_use && typeof (recommended_use) !== "string"){
-                errorMsg.push({ "recommended_use": recommended_use + " is invalid" })
+                msgError.push({ "recommended_use": recommended_use + " is invalid" })
             }
             
             if (datePosted && typeof (datePosted) !== "string"){
-                errorMsg.push({ "datePosted": datePosted + " is invalid" })
+                msgError.push({ "datePosted": datePosted + " is invalid" })
             }
             
             
 
 
-            if (errorMsg && errorMsg.length > 0) {
-                res.status(406).json({ "Errors": errorMsg });
+            if (msgError && msgError.length > 0) {
+                res.status(406).json({ "Errors": msgError });
             } else {
 
 
@@ -492,7 +495,10 @@ async function main() {
     //update 
     // patch vs put 
     app.put('/soap_listings/:id', async function (req,res) {
+  
 
+        try {
+            
         let skinType = [];
         if (Array.isArray(req.body.skin_type)) {
             skinType = req.body.skin_type
@@ -519,9 +525,81 @@ async function main() {
 
         let treat = req.body.suitability.treat
         let recommended_use = req.body.suitability.recommended_use
-        let datePosted = req.body.suitability.date_posted ? new Date(req.body.suitability.date_posted) : new Date();
+        let datePosted = req.body.suitability.date_posted 
+        // ? new Date(req.body.suitability.date_posted) : new Date();
         let suitability = { treat, recommended_use, datePosted }
 
+
+        let msgError = [];
+
+        if (name && name.length < 3 || typeof (name) === "number") {
+            msgError.push({ "name": name + " is invalid" });
+        }
+
+        if (email && email.length < 3 || typeof (email) !== "string") {
+            msgError.push({ "email": email + " is invalid" })
+        }
+        else if (email && !email.includes('@')) {
+            msgError.push({ "email": email + " is invalid" })
+        }
+
+        if (soapLabel && typeof (soapLabel) !== "string") {
+            msgError.push({ "soap_label": soapLabel + " is invalid" })
+        }
+
+        // if (imageUrl !== null && typeof (imageUrl) !== "string") {
+        //     msgError.push({ "image_url": imageUrl + " is invalid" })
+        // }
+        if (imageUrl !== null && !imageUrl.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+                msgError.push({ image_url: `${imageUrl} is an invalid url` });
+            }
+
+        if (color && typeof (color) !== "object") {
+            msgError.push({ "color": color + " is invalid" })
+        }
+
+        if (countryOrigin && typeof (countryOrigin) !== "string") {
+            msgError.push({ "color": color + " is invalid" })
+        }
+        // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
+        //     msgError.push({ "estimate_delivery": estimateDelivery + " is invalid" })
+        // }
+
+        if (skin_Type && typeof (skin_Type) !== "object") {
+            msgError.push({ "skin_type": skin_Type + " is invalid" })
+        }
+        
+
+        if (oil_Ingredient && typeof (oil_Ingredient) !== "object") {
+            msgError.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
+        }
+
+        if ( baseIngredient && typeof (baseIngredient) !== "string") {
+            msgError.push({ "baseIngredient": baseIngredient + " is invalid" })
+        }
+        
+        if (milk_Ingredient && typeof (milk_Ingredient) !== "string") {
+            msgError.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
+        }
+
+        if ((treat && typeof (treat) !== "object")){
+            msgError.push({ "treat": treat + " is invalid" })
+        }
+
+        if (recommended_use && typeof (recommended_use) !== "string"){
+            msgError.push({ "recommended_use": recommended_use + " is invalid" })
+        }
+        
+        if (datePosted && typeof (datePosted) !== "string"){
+            msgError.push({ "datePosted": datePosted + " is invalid" })
+        }
+        
+        
+
+
+        if (msgError && msgError.length > 0) {
+            res.status(406).json({ "Errors": msgError });
+        } else {
 
         let results = await db.collection(SOAP).updateOne({
             '_id': ObjectId(req.params.id)
@@ -543,8 +621,14 @@ async function main() {
         })
         res.status(200);
         res.json(results);
-    })
+    
 
+} 
+    }catch (e){
+    res.status(500)
+    res.json("Internal Server error")
+}
+})
     // delete
     app.delete('/soap_listings/:id', async function (req, res) {
         let results = await db.collection('sightings').deleteOne({
