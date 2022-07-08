@@ -41,7 +41,7 @@ async function main() {
         let _id = new ObjectId()
         let datePosted = new Date()
         let username = req.body.username;
-        let comments = req.body.comment;
+        let comment = req.body.comment;
 
         let msgError = [];
 
@@ -49,8 +49,8 @@ async function main() {
             msgError.push({ "userName": username + " is invalid" });
         }
 
-        if (typeof(comments)!== "string") {
-            msgError.push({ "comment": comments + " is invalid" });
+        if (typeof(comment)!== "string") {
+            msgError.push({ "comment": comment + " is invalid" });
         }
 
 
@@ -63,7 +63,7 @@ async function main() {
 
                 '$push': {
                     comments: {
-                        _id, datePosted, username, comments
+                        _id, datePosted, username, comment
                     }
                 }
 
@@ -110,25 +110,25 @@ async function main() {
 
             let name = req.body.name
             let email = req.body.email
-            let contactNo = req.body.contact_no
-            let soapLabel = req.body.soap_label
-            let imageUrl = req.body.image_url
+            let contact_no = req.body.contact_no
+            let soap_label = req.body.soap_label
+            let image_url = req.body.image_url
             let color = req.body.color
-            let countryOrigin = req.body.country_origin
+            let country_origin = req.body.country_origin
             let cost = req.body.cost
             // let estimateDelivery = req.body.estimate_delivery
-            let skin_Type = skinType
+            let skin_type = skinType
 
-            let oil_Ingredient = req.body.ingredients.oil_ingredient
-            let baseIngredient = req.body.ingredients.base_ingredient
-            let milk_Ingredient = req.body.ingredients.milk_ingredient
-            let ingredients = { oil_Ingredient, baseIngredient, milk_Ingredient }
+            let oil_ingredient = req.body.ingredients.oil_ingredient
+            let base_ingredient = req.body.ingredients.base_ingredient
+            let milk_ingredient = req.body.ingredients.milk_ingredient
+            let ingredients = { oil_ingredient, base_ingredient, milk_ingredient }
 
 
             let treat = req.body.suitability.treat
             let recommended_use = req.body.suitability.recommended_use
-            let datePosted = req.body.suitability.date_posted
-            let suitability = { treat, recommended_use, datePosted }
+            let date_posted = req.body.suitability.date_posted
+            let suitability = { treat, recommended_use, date_posted }
 
             let msgError = [];
 
@@ -143,43 +143,43 @@ async function main() {
                 msgError.push({ "email": email + " is invalid" })
             }
 
-            if (soapLabel && typeof (soapLabel) !== "string") {
-                msgError.push({ "soap_label": soapLabel + " is invalid" })
+            if (soap_label && typeof (soap_label) !== "string") {
+                msgError.push({ "soap_label": soap_label + " is invalid" })
             }
 
             // if ( imageUrl !== null || typeof (imageUrl) !== "string") {
             //     msgError.push({ "image_url": imageUrl + " is invalid" })
             // }
-            if (imageUrl !== null && !imageUrl.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
-                msgError.push({ image_url: `${imageUrl} is an invalid url` });
+            if (image_url !== null && !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+                msgError.push({ image_url: `${image_url} is an invalid url` });
             }
 
             if (color && typeof (color) !== "object") {
                 msgError.push({ "color": color + " is invalid" })
             }
 
-            if (countryOrigin && typeof (countryOrigin) !== "string") {
-                msgError.push({ "color": color + " is invalid" })
+            if (country_origin && typeof (country_origin) !== "string") {
+                msgError.push({ "country_origin": country_origin  + " is invalid" })
             }
             // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
             //     msgError.push({ "estimate_delivery": estimateDelivery + " is invalid" })
             // }
 
-            if (skin_Type && typeof (skin_Type) !== "object") {
-                msgError.push({ "skin_type": skin_Type + " is invalid" })
+            if (skin_type && typeof (skin_type) !== "object") {
+                msgError.push({ "skin_type": skin_type + " is invalid" })
             }
 
 
-            if (oil_Ingredient && typeof (oil_Ingredient) !== "object") {
-                msgError.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
+            if (oil_ingredient && typeof (oil_ingredient) !== "object") {
+                msgError.push({ "oil_ingredient": oil_ingredient + " is invalid" })
             }
 
-            if (baseIngredient && typeof (baseIngredient) !== "string") {
-                msgError.push({ "baseIngredient": baseIngredient + " is invalid" })
+            if (base_ingredient && typeof (base_ingredient) !== "string") {
+                msgError.push({ "base_ingredient": base_ingredient + " is invalid" })
             }
 
-            if (milk_Ingredient && typeof (milk_Ingredient) !== "string") {
-                msgError.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
+            if (milk_ingredient && typeof (milk_ingredient) !== "string") {
+                msgError.push({ "milk_ingredient": milk_ingredient + " is invalid" })
             }
 
             if ((treat && typeof (treat) !== "object")) {
@@ -190,8 +190,8 @@ async function main() {
                 msgError.push({ "recommended_use": recommended_use + " is invalid" })
             }
 
-            if (datePosted && typeof (datePosted) !== "string") {
-                msgError.push({ "datePosted": datePosted + " is invalid" })
+            if (date_posted && typeof (date_posted) !== "string") {
+                msgError.push({ "date_posted": date_posted + " is invalid" })
             }
 
 
@@ -205,14 +205,14 @@ async function main() {
                 let result = await db.collection(SOAP).insertOne({
                     "name": name,
                     "email": email,
-                    "contact_no": contactNo,
-                    "soap_label": soapLabel,
-                    "image_url": imageUrl,
+                    "contact_no": contact_no,
+                    "soap_label": soap_label,
+                    "image_url": image_url,
                     "color": color,
-                    "country_origin": countryOrigin,
+                    "country_origin": country_origin,
                     "cost": cost,
                     // "estimate_delivery": estimateDelivery,
-                    "skin_type": skin_Type,
+                    "skin_type": skin_type,
                     "ingredients": ingredients,
                     "suitability": suitability
 
@@ -397,7 +397,7 @@ async function main() {
 
         // skin type
         if (req.query.skin_type) {
-            criteria["$and"] = req.query.skin_type.map(type => { return { "skin_type": { "$in": [type] } } })
+            criteria["$and"] = req.query.skin_type.map(type => { return { "skin_type": { "$in": [type] } } })  
             // criteria['skin_type'] = {
             //     '$in': ['sensitive', 'dry', 'oily', 'cracked']
             // }
@@ -424,40 +424,53 @@ async function main() {
         // console.log(req.query.stuff)
         //   console.log(req.query.ingredients.oil_ingredient)
         if (req.query.oil_ingredient) {
-            criteria['oil_ingredient'] = {
+            criteria['ingredients.oil_ingredient'] = {
                 '$regex': req.query.oil_ingredient, '$options': 'i'
             }
         }
-        if (req.query.base_ingredient) {
-            criteria['base_ingredient'] = {
+        if (req.query.base_ingredient) { 
+            criteria['ingredients.base_ingredient'] = {
                 '$regex': req.query.base_ingredient, '$options': 'i'
             }
         }
 
         if (req.query.milk_ingredient) {
-            criteria['milk_ingredient'] = {
+            criteria['ingredients.milk_ingredient'] = {
                 '$regex': req.query.milk_ingredient, '$options': 'i'
             }
         }
 
         // suitability
         if (req.query.treat) {
-            criteria['treat'] = {
+            criteria['suitability.treat'] = {
                 '$in': [req.query.treat]
             }
         }
         if (req.query.recommended_use) {
-            criteria['recommended_use'] = {
+            criteria['suitability.recommended_use'] = {
                 '$regex': req.query.recommended_use, '$options': 'i'
             }
         }
         if (req.query.date_posted) {
-            criteria['date_posted'] = {
+            criteria['suitability.date_posted'] = {
                 '$regex': req.query.date_posted, '$options': 'i'
             }
 
         }
+        //comments
+        if (req.query.username) {
+            criteria['comments.username'] = {
+                '$regex': req.query.username, '$options': 'i'
+            }
 
+        }
+        if (req.query.comment) {
+            criteria['comments.comment'] = {
+                '$regex': req.query.comment, '$options': 'i'
+            }
+
+        }
+   
 
 
         if (req.query.search) {
@@ -476,7 +489,7 @@ async function main() {
                     }
                 },
                 {
-                    'ingredients': {
+                    'country_origin': {
                         '$regex': `${req.query.search}`,
                         '$options': 'i'
                     }
@@ -488,24 +501,74 @@ async function main() {
                     }
                 },
                 {
-                    'suitability': {
+                    'skin_type': {
                         '$regex': `${req.query.search}`,
                         '$options': 'i'
                     }
                 },
                 {
-                    'cost': {
-                        '$gte': parseInt(req.query.search),
-                        '$lte': parseInt(req.query.search),
+                    'suitability.treat': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
                     }
                 },
                 {
-                    'country_origin': {
+                    'suitability.recommended_use': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'suitability.date_posted': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+             
+                {
+                    'ingredients.oil_ingredient': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'ingredients.base_ingredient': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'ingredients.milk_ingredient': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                // {
+                //     'treat': {
+                //         '$regex': `${req.query.search}`,
+                //         '$options': 'i'
+                //     }
+                // },
+                {
+                    'comments.recommended_use': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+         
+                {
+                    'comments.comment': {
+                        '$regex': `${req.query.search}`,
+                        '$options': 'i'
+                    }
+                },
+                {
+                    'comments.username': {
                         '$regex': `${req.query.search}`,
                         '$options': 'i'
                     }
                 }
-
+             
 
             ]
         };
@@ -524,7 +587,9 @@ async function main() {
                     // "estimate_delivery": 1,
                     "skin_type": 1,
                     "ingredients": 1,
-                    "suitability": 1
+                    "suitability": 1,
+                    "comments":1,
+                    
                 }
             })
         res.status(200)
@@ -552,27 +617,25 @@ async function main() {
 
             let name = req.body.name
             let email = req.body.email
-            let contactNo = req.body.contact_no
-            let soapLabel = req.body.soap_label
-            let imageUrl = req.body.image_url
+            let contact_no = req.body.contact_no
+            let soap_label = req.body.soap_label
+            let image_url = req.body.image_url
             let color = req.body.color
-            let countryOrigin = req.body.country_origin
+            let country_origin = req.body.country_origin
             let cost = req.body.cost
             // let estimateDelivery = req.body.estimate_delivery
-            let skin_Type = skinType
+            let skin_type = skinType
 
-            let oil_Ingredient = req.body.ingredients.oil_ingredient
-            let baseIngredient = req.body.ingredients.base_ingredient
-            let milk_Ingredient = req.body.ingredients.milk_ingredient
-            let ingredients = { oil_Ingredient, baseIngredient, milk_Ingredient }
+            let oil_ingredient = req.body.ingredients.oil_ingredient
+            let base_ingredient = req.body.ingredients.base_ingredient
+            let milk_ingredient = req.body.ingredients.milk_ingredient
+            let ingredients = { oil_ingredient, base_ingredient, milk_ingredient }
 
 
             let treat = req.body.suitability.treat
             let recommended_use = req.body.suitability.recommended_use
-            let datePosted = req.body.suitability.date_posted
-            // ? new Date(req.body.suitability.date_posted) : new Date();
-            let suitability = { treat, recommended_use, datePosted }
-
+            let date_posted = req.body.suitability.date_posted
+            let suitability = { treat, recommended_use, date_posted }
 
             let msgError = [];
 
@@ -587,43 +650,43 @@ async function main() {
                 msgError.push({ "email": email + " is invalid" })
             }
 
-            if (soapLabel && typeof (soapLabel) !== "string") {
-                msgError.push({ "soap_label": soapLabel + " is invalid" })
+            if (soap_label && typeof (soap_label) !== "string") {
+                msgError.push({ "soap_label": soap_label + " is invalid" })
             }
 
-            // if (imageUrl !== null && typeof (imageUrl) !== "string") {
+            // if ( imageUrl !== null || typeof (imageUrl) !== "string") {
             //     msgError.push({ "image_url": imageUrl + " is invalid" })
             // }
-            if (imageUrl !== null && !imageUrl.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
-                msgError.push({ image_url: `${imageUrl} is an invalid url` });
+            if (image_url !== null && !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+                msgError.push({ image_url: `${image_url} is an invalid url` });
             }
 
             if (color && typeof (color) !== "object") {
                 msgError.push({ "color": color + " is invalid" })
             }
 
-            if (countryOrigin && typeof (countryOrigin) !== "string") {
-                msgError.push({ "color": color + " is invalid" })
+            if (country_origin && typeof (country_origin) !== "string") {
+                msgError.push({ "country_origin": country_origin  + " is invalid" })
             }
             // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
             //     msgError.push({ "estimate_delivery": estimateDelivery + " is invalid" })
             // }
 
-            if (skin_Type && typeof (skin_Type) !== "object") {
-                msgError.push({ "skin_type": skin_Type + " is invalid" })
+            if (skin_type && typeof (skin_type) !== "object") {
+                msgError.push({ "skin_type": skin_type + " is invalid" })
             }
 
 
-            if (oil_Ingredient && typeof (oil_Ingredient) !== "object") {
-                msgError.push({ "oil_Ingredient": oil_Ingredient + " is invalid" })
+            if (oil_ingredient && typeof (oil_ingredient) !== "object") {
+                msgError.push({ "oil_ingredient": oil_ingredient + " is invalid" })
             }
 
-            if (baseIngredient && typeof (baseIngredient) !== "string") {
-                msgError.push({ "baseIngredient": baseIngredient + " is invalid" })
+            if (base_ingredient && typeof (base_ingredient) !== "string") {
+                msgError.push({ "base_ingredient": base_ingredient + " is invalid" })
             }
 
-            if (milk_Ingredient && typeof (milk_Ingredient) !== "string") {
-                msgError.push({ "milk_Ingredient": milk_Ingredient + " is invalid" })
+            if (milk_ingredient && typeof (milk_ingredient) !== "string") {
+                msgError.push({ "milk_ingredient": milk_ingredient + " is invalid" })
             }
 
             if ((treat && typeof (treat) !== "object")) {
@@ -634,8 +697,8 @@ async function main() {
                 msgError.push({ "recommended_use": recommended_use + " is invalid" })
             }
 
-            if (datePosted && typeof (datePosted) !== "string") {
-                msgError.push({ "datePosted": datePosted + " is invalid" })
+            if (date_posted && typeof (date_posted) !== "string") {
+                msgError.push({ "date_posted": date_posted + " is invalid" })
             }
 
 
@@ -651,14 +714,14 @@ async function main() {
                     '$set': {
                         "name": name,
                         "email": email,
-                        "contact_no": contactNo,
-                        "soap_label": soapLabel,
-                        "image_url": imageUrl,
+                        "contact_no": contact_no,
+                        "soap_label": soap_label,
+                        "image_url": image_url,
                         "color": color,
-                        "country_origin": countryOrigin,
+                        "country_origin": country_origin,
                         "cost": cost,
                         // "estimate_delivery": estimateDelivery,
-                        "skin_type": skin_Type,
+                        "skin_type": skin_type,
                         "ingredients": ingredients,
                         "suitability": suitability
                     }
@@ -673,6 +736,8 @@ async function main() {
             res.json("Internal Server error")
         }
     })
+
+
     // delete
     app.delete('/soap_listings/:id', async function (req, res) {
         let results = await db.collection('sightings').deleteOne({
