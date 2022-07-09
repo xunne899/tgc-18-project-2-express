@@ -32,8 +32,6 @@ async function main() {
     })
 
 
-
-
     app.post('/soap_listings/comments/:id', async (req, res) => {
         
        
@@ -81,23 +79,7 @@ async function main() {
     app.post('/soap_listings', async function (req, res) {
 
         console.log(req.body.ingredients)
-
-
-
-        // let oilIngredient = [];
-        // if (Array.isArray(req.body.ingredients.oil_ingredient)) {
-        //     oilIngredient = req.body.ingredients.oil_ingredient
-        // } else if (req.body.ingredients.oil_ingredient) {
-        //     oilIngredient  = [ req.body.ingredients.oil_ingredient ]
-        // } 
-
-        // let milkIngredient = [];
-        // if (Array.isArray(req.body.ingredients.milk_ingredient)) {
-        //     milkIngredient = req.body.ingredients.milk_ingredient
-        // } else if (req.body.ingredients.milk_ingredient) {
-        //     milkIngredient  = [ req.body.ingredients.milk_ingredient ]
-        // } 
-        // console.log(milkIngredient)
+   
 
         try {
          
@@ -225,38 +207,7 @@ async function main() {
                 // success
             }
 
-            // if(name.length < 3 || typeof(name) === "number"){
-            //     res.status(400).send('Name error')
-            // } 
-
-            // // if(email.length < 3 || typeof(email) !== "string"){
-            // //     res.status(400).send('email error')
-            // // }
-
-            // // if (email && !email.includes('@')) {
-            // //     res.status(400).send('email error')
-            // // }
-            // else if( contactNo && typeof(contactNo) !== "string"){
-            //     res.status(400).send('Contact_no error')
-
-            // } 
-
-
-
-            // else{
-            //     res.status(201)
-            //     res.send("success")
-            // }
-
-
-            // if(name.length < 3){
-            //     res.status(400).send('message error')
-
-            // }else{
-            //     res.status(201)
-            //     res.send("success")
-            // }
-
+         
 
 
         } catch (e) {
@@ -266,27 +217,6 @@ async function main() {
     })
 
     app.get('/soap_listings', async function (req, res) {
-        // console.log(req.body.ingredients)
-        // let skinType = [];
-        // if (Array.isArray(req.query.skin_type)) {
-        //     skinType = req.query.skin_type
-        // } else if (req.query.skin_type) {
-        //     skinType  = [ req.query.skin_type ]
-        // } 
-
-        // let oilIngredient = [];
-        // if (Array.isArray(req.query.ingredients.oil_ingredient)) {
-        //     oilIngredient = req.query.ingredients.oil_ingredient
-        // } else if (req.query.ingredients.oil_ingredient) {
-        //     oilIngredient  = [ req.query.ingredients.oil_ingredient]
-        // } 
-
-        // let milkIngredient = [];
-        // if (Array.isArray(req.query.ingredients.milk_ingredient)) {
-        //     milkIngredient = req.query.ingredients.milk_ingredient
-        // } else if (req.query.ingredients.milk_ingredient) {
-        //     milkIngredient  = [ req.query.ingredients.milk_ingredient ]
-        // } 
 
        
 
@@ -360,42 +290,7 @@ async function main() {
                 '$lte': parseInt(req.query.max_cost),
             }
         }
-        // if (req.query.cost) {
-        //     if (req.query.cost == 30) {
-        //         criteria['cost'] = {
-        //             '$lte': 30,
-
-        //         }
-        //     }
-        // }
-
-        // estimated_delivery
-        // if (req.query.estimate_delivery) {
-        //     if (req.query.estimate_delivery == 1) {
-        //         criteria['estimate_delivery'] = {
-        //             '$lte': 1
-        //         }
-        //     }
-        // }
-        // if (req.query.estimate_delivery) {
-        //     if (req.query.estimate_delivery == 'less than 2 weeks') {
-        //         criteria['estimate_delivery'] = {
-        //             '$lte': 2,
-
-
-        //         }
-        //     }
-        // }
-        // if (req.query.estimate_delivery) {
-        //     if (req.query.estimate_delivery == 'less than 3 weeks') {
-        //         criteria['estimate_delivery'] = {
-        //             '$lte': 3,
-
-
-        //         }
-        //     }
-        // }
-
+      
         // skin type
         if (req.query.skin_type) {
             criteria["$and"] = req.query.skin_type.map(type => { return { "skin_type": { "$in": [type] } } })  
@@ -405,19 +300,6 @@ async function main() {
 
 
 
-            // criteria['skin_type'] = {
-            //     '$or': [
-            //         { 'skin_type': 'sensitive' },
-            //         { 'skin_type': 'dry' },
-            //         { 'skin_type': 'oily' },
-            //         { 'skin_type': 'cracked' },
-            //     ]
-            // }
-            // , {
-            //     'projection': {
-            //         'skin_type': 1
-            //     }
-            // }
         }
 
         //ingredients
@@ -472,7 +354,6 @@ async function main() {
 
         }
    
-
 
         if (req.query.search) {
             criteria['$or'] = [
