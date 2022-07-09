@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require('cors');
 require('dotenv').config();
 
-// const ObjectId = require('mongodb').ObjectId;
 const MongoUtil = require("./MongoUtil")
 const MONGO_URI = process.env.MONGO_URI;
 const app = express();
@@ -23,6 +22,8 @@ const SOAP = "soaps";
 
 
 async function main() {
+    
+    
     const db = await MongoUtil.connect(MONGO_URI, "tgc18_soap_collection");
     console.log("Database connected")
 
@@ -34,6 +35,9 @@ async function main() {
 
 
     app.post('/soap_listings/comments/:id', async (req, res) => {
+        
+       
+
         let _id = new ObjectId()
         let datePosted = new Date()
         let username = req.body.username;
@@ -96,7 +100,7 @@ async function main() {
         // console.log(milkIngredient)
 
         try {
-
+         
             let skinType = [];
             if (Array.isArray(req.body.skin_type)) {
                 skinType = req.body.skin_type
@@ -170,11 +174,11 @@ async function main() {
                 msgError.push({ "oil_ingredient": oil_ingredient + " is invalid" })
             }
 
-            if (base_ingredient && typeof (base_ingredient) !== "string") {
+            if (base_ingredient && typeof (base_ingredient) !== "object") {
                 msgError.push({ "base_ingredient": base_ingredient + " is invalid" })
             }
 
-            if (milk_ingredient && typeof (milk_ingredient) !== "string") {
+            if (milk_ingredient && typeof (milk_ingredient) !== "object") {
                 msgError.push({ "milk_ingredient": milk_ingredient + " is invalid" })
             }
 
@@ -284,7 +288,7 @@ async function main() {
         //     milkIngredient  = [ req.query.ingredients.milk_ingredient ]
         // } 
 
-
+       
 
         let criteria = {};
        
@@ -596,6 +600,7 @@ async function main() {
 
 // get doc field id
     app.get('/soap_listings/:id', async function (req, res) {
+      
         let results = await db.collection(SOAP).findOne({
             '_id': ObjectId(req.params.id)
         },         {
@@ -708,11 +713,11 @@ async function main() {
                 msgError.push({ "oil_ingredient": oil_ingredient + " is invalid" })
             }
 
-            if (base_ingredient && typeof (base_ingredient) !== "string") {
+            if (base_ingredient && typeof (base_ingredient) !== "object") {
                 msgError.push({ "base_ingredient": base_ingredient + " is invalid" })
             }
 
-            if (milk_ingredient && typeof (milk_ingredient) !== "string") {
+            if (milk_ingredient && typeof (milk_ingredient) !== "object") {
                 msgError.push({ "milk_ingredient": milk_ingredient + " is invalid" })
             }
 
@@ -767,6 +772,8 @@ async function main() {
 
     // delete
     app.delete('/soap_listings/:id', async function (req, res) {
+
+  
         let results = await db.collection('sightings').deleteOne({
             '_id': ObjectId(req.params.id)
         })
