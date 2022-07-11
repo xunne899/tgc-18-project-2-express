@@ -132,11 +132,13 @@ async function main() {
             // if ( imageUrl !== null || typeof (imageUrl) !== "string") {
             //     msgError.push({ "image_url": imageUrl + " is invalid" })
             // }
-            if (image_url !== null && !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+            if ( typeof (image_url) !== "string"
+                // !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)
+                ) {
                 msgError.push({ image_url: `${image_url} is an invalid url` });
             }
 
-            if (color && typeof (color) !== "object") {
+            if (color && typeof (color) !== "string") {
                 msgError.push({ "color": color + " is invalid" })
             }
 
@@ -308,18 +310,18 @@ async function main() {
         //   console.log(req.query.ingredients.oil_ingredient)
         if (req.query.oil_ingredient) {
             criteria['ingredients.oil_ingredient'] = {
-                '$regex': req.query.oil_ingredient, '$options': 'i'
+                '$in': [req.query.oil_ingredient]
             }
         }
         if (req.query.base_ingredient) { 
             criteria['ingredients.base_ingredient'] = {
-                '$regex': req.query.base_ingredient, '$options': 'i'
+                '$in': [ req.query.base_ingredient]
             }
         }
 
         if (req.query.milk_ingredient) {
             criteria['ingredients.milk_ingredient'] = {
-                '$regex': req.query.milk_ingredient, '$options': 'i'
+                '$in': [ req.query.milk_ingredient]
             }
         }
 
@@ -570,11 +572,13 @@ async function main() {
             // if ( imageUrl !== null || typeof (imageUrl) !== "string") {
             //     msgError.push({ "image_url": imageUrl + " is invalid" })
             // }
-            if (image_url !== null && !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)) {
+            if ( typeof (image_url) !== "string"
+                // !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)
+                ) {
                 msgError.push({ image_url: `${image_url} is an invalid url` });
             }
 
-            if (color && typeof (color) !== "object") {
+            if (color && typeof (color) !== "string") {
                 msgError.push({ "color": color + " is invalid" })
             }
 
