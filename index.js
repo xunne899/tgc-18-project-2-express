@@ -174,7 +174,7 @@ async function main() {
                 msgError.push({ "recommended_use": recommended_use + " is invalid" })
             }
             //date
-            if (date_posted && typeof (date_posted) !== "string") {
+            if (date_posted && typeof (date_posted) !== "number") {
                 msgError.push({ "date_posted": date_posted + " is invalid" })
             }
 
@@ -612,7 +612,7 @@ async function main() {
                 msgError.push({ "recommended_use": recommended_use + " is invalid" })
             }
 
-            if (date_posted && typeof (date_posted) !== "string") {
+            if (date_posted && typeof (date_posted) !== "number") {
                 msgError.push({ "date_posted": date_posted + " is invalid" })
             }
        
