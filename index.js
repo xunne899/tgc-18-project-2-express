@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 require('dotenv').config();
-
+const emailValidate = require("./emailValidate")
 const MongoUtil = require("./MongoUtil")
 const MONGO_URI = process.env.MONGO_URI;
 const app = express();
@@ -118,12 +118,13 @@ async function main() {
                 msgError.push({ "name": name + " is invalid" });
             }
 
-            if (email && email.length < 3 || typeof (email) !== "string") {
-                msgError.push({ "email": email + " is invalid" })
-            }
-            else if (email && !email.includes('@')) {
-                msgError.push({ "email": email + " is invalid" })
-            }
+            // if (email && email.length < 3 || typeof (email) !== "string") {
+            //     msgError.push({ "email": email + " is invalid" })
+            // }
+            // else if (email && !email.includes('@')) {
+            //     msgError.push({ "email": email + " is invalid" })
+            // }
+            emailValidate.validate(email,msgError)
 
             if (soap_label && typeof (soap_label) !== "string") {
                 msgError.push({ "soap_label": soap_label + " is invalid" })
