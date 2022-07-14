@@ -296,7 +296,7 @@ async function main() {
         if (req.query.skin_type) {
             criteria["$and"] = req.query.skin_type.map(type => { return { "skin_type": { "$in": [type] } } })
             // criteria['skin_type'] = {
-            //     '$in': ['sensitive', 'dry', 'oily', 'cracked']
+            //     '$in': ['sensitive', 'dry', 'oily']
             // }
 
 
@@ -655,11 +655,11 @@ async function main() {
     app.delete('/soap_listings/:id', async function (req, res) {
 
 
-        let results = await db.collection('sightings').deleteOne({
+        let results = await db.collection(SOAP).deleteOne({
             '_id': ObjectId(req.params.id)
         })
 
-        res.status(200);
+        res.status(200)
         res.json({ 'status': 'ok' });
     })
 
