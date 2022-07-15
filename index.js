@@ -358,6 +358,12 @@ async function main() {
 
         if (req.query.search) {
             criteria['$or'] = [
+                {
+                    '_id': {
+                        '$regex': `${ObjectId(req.query.search)}`,
+                        '$options': 'i'
+                    }
+                },
 
                 {
                     'name': {
