@@ -334,10 +334,10 @@ async function main() {
     // }
 
     if (req.query.skin_type) {
-      criteria["$and"].push({ $in: req.query.skin_type });
+      criteria["$and"].push({ skin_type: { $in: [req.query.skin_type] } });
     }
     if (req.query.oil_ingredient) {
-      criteria["$and"].push({ $in: req.query.oil_ingredient });
+      criteria["$and"].push({ "ingredients.oil_ingredient": { $in: req.query.oil_ingredient } });
     }
 
     if (req.query.base_ingredient) {
