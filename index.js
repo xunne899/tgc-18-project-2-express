@@ -312,7 +312,7 @@ async function main() {
 
     // skin type
     if (req.query.skin_type) {
-      criteria["$and"] = req.query.skin_type.map((type) => {
+      criteria["$or"] = req.query.skin_type.map((type) => {
         return { skin_type: { $in: [type] } };
       });
       // criteria['skin_type'] = {
@@ -325,7 +325,7 @@ async function main() {
     // console.log(req.query.stuff)
     //   console.log(req.query.ingredients.oil_ingredient)
     if (req.query.oil_ingredient) {
-      criteria["$and"] = req.query.oil_ingredient.map((type) => {
+      criteria["$or"] = req.query.oil_ingredient.map((type) => {
         return { "ingredients.oil_ingredient": { $in: [type] } };
       });
       // criteria['ingredients.oil_ingredient'] = {
@@ -333,7 +333,7 @@ async function main() {
       // }
     }
     if (req.query.base_ingredient) {
-      criteria["$and"] = req.query.base_ingredient.map((type) => {
+      criteria["$or"] = req.query.base_ingredient.map((type) => {
         return { "ingredients.base_ingredient": { $in: [type] } };
       });
       // criteria['ingredients.base_ingredient'] = {
@@ -342,7 +342,7 @@ async function main() {
     }
 
     if (req.query.milk_ingredient) {
-      criteria["$and"] = req.query.milk_ingredient.map((type) => {
+      criteria["$or"] = req.query.milk_ingredient.map((type) => {
         return { "ingredients.milk_ingredient": { $in: [type] } };
       });
       // criteria['ingredients.milk_ingredient'] = {
