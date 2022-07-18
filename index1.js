@@ -311,35 +311,27 @@ async function main() {
     }
 
     // skin type
-    // if (req.query.skin_type) {
-    //   criteria["$and"] = req.query.skin_type.map((type) => {
-    //     return { skin_type: { $in: [type] } };
-    //   });
-    //   // criteria['skin_type'] = {
-    //   //     '$in': ['sensitive', 'dry', 'oily']
-    //   // }
-    // }
+    if (req.query.skin_type) {
+      criteria["$and"] = req.query.skin_type.map((type) => {
+        return { skin_type: { $in: [type] } };
+      });
+      // criteria['skin_type'] = {
+      //     '$in': ['sensitive', 'dry', 'oily']
+      // }
+    }
 
     //ingredients
     // console.log(req.query.oil_ingredient)
     // console.log(req.query.stuff)
     //   console.log(req.query.ingredients.oil_ingredient)
-    // if (req.query.oil_ingredient) {
-    //   criteria["$and"] = req.query.oil_ingredient.map((type) => {
-    //     return { "ingredients.oil_ingredient": { $in: [type] } };
-    //   });
-    //   // criteria['ingredients.oil_ingredient'] = {
-    //   //     '$in': [req.query.oil_ingredient]
-    //   // }
-    // }
-
-    if (req.query.skin_type) {
-      criteria["$and"].push({ $in: req.query.skin_type });
-    }
     if (req.query.oil_ingredient) {
-      criteria["$and"].push({ $in: req.query.oil_ingredient });
+      criteria["$and"] = req.query.oil_ingredient.map((type) => {
+        return { "ingredients.oil_ingredient": { $in: [type] } };
+      });
+      // criteria['ingredients.oil_ingredient'] = {
+      //     '$in': [req.query.oil_ingredient]
+      // }
     }
-
     if (req.query.base_ingredient) {
       criteria["$and"] = req.query.base_ingredient.map((type) => {
         return { "ingredients.base_ingredient": { $in: [type] } };
@@ -693,6 +685,6 @@ async function main() {
 
 main();
 
-app.listen(process.env.PORT, function () {
+app.listen( process.env.PORT, function () {
   console.log("Server has started");
 });
