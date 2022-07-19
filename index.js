@@ -547,19 +547,9 @@ async function main() {
       let suitability = { treat, recommended_use, date_posted };
 
       let msgError = {};
-      // name
-      // if (name == undefined || (name && name.length < 3) || typeof name === "number") {
-      //   msgError.push({ name: name + " is invalid" });
-      // }
+ 
 
-      // if (email && email.length < 3 || typeof (email) !== "string") {
-      //     msgError.push({ "email": email + " is invalid" })
-      // }
-      // else if (email && !email.includes('@')) {
-      //     msgError.push({ "email": email + " is invalid" })
-      // }
-
-      // email
+      // validator
       validator.validateNotEmptyString(name, "name", msgError);
       validator.validateEmail(email, msgError);
       validator.validateNotEmptyString(contact_no, "contact_no", msgError);
@@ -576,68 +566,7 @@ async function main() {
       validator.validateNotNumber(date_posted, "date_posted", msgError);
       validator.validateNotNumber(cost, "cost", msgError);
 
-      // validator.validateEmail(email, msgError);
 
-      // // contact
-      // if (contact_no == undefined || (contact_no && contact_no.length < 3)) {
-      //   msgError.push({ contact_no: contact_no + " is invalid" });
-      // }
-
-      // // soap
-      // if (soap_label == undefined || (soap_label && typeof soap_label !== "string")) {
-      //   msgError.push({ soap_label: soap_label + " is invalid" });
-      // }
-
-      // // image
-      // if (
-      //   image_url == undefined ||
-      //   typeof image_url !== "string"
-      //   // !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)
-      // ) {
-      //   msgError.push({ image_url: `${image_url} is an invalid url` });
-      // }
-      // // color
-      // if (color == undefined || (color && typeof color !== "string")) {
-      //   msgError.push({ color: color + " is invalid" });
-      // }
-      // // country
-      // if (country_origin == undefined || (country_origin && typeof country_origin !== "string")) {
-      //   msgError.push({ country_origin: country_origin + " is invalid" });
-      // }
-      // // if (estimateDelivery && typeof (estimateDelivery) !== "string") {
-      // //     msgError.push({ "estimate_delivery": estimateDelivery + " is invalid" })
-      // // }
-      // // skin type
-      // if (skin_type == undefined || (skin_type && typeof skin_type !== "object")) {
-      //   msgError.push({ skin_type: skin_type + " is invalid" });
-      // }
-
-      // // oil
-      // if (oil_ingredient == undefined || (oil_ingredient && typeof oil_ingredient !== "object")) {
-      //   msgError.push({ oil_ingredient: oil_ingredient + " is invalid" });
-      // }
-      // // base
-      // if (base_ingredient == undefined || (base_ingredient && typeof base_ingredient !== "object")) {
-      //   msgError.push({ base_ingredient: base_ingredient + " is invalid" });
-      // }
-
-      // // milk
-
-      // if (milk_ingredient == undefined || (milk_ingredient && typeof milk_ingredient !== "object")) {
-      //   msgError.push({ milk_ingredient: milk_ingredient + " is invalid" });
-      // }
-      // // treat
-      // if (treat == undefined || (treat && typeof treat !== "object")) {
-      //   msgError.push({ treat: treat + " is invalid" });
-      // }
-      // // recommended use
-      // if (recommended_use == undefined || (recommended_use && typeof recommended_use !== "string")) {
-      //   msgError.push({ recommended_use: recommended_use + " is invalid" });
-      // }
-
-      // if (date_posted == undefined || (date_posted && typeof date_posted !== "number")) {
-      //   msgError.push({ date_posted: date_posted + " is invalid" });
-      // }
 
       if (msgError && Object.keys(msgError).length > 0) {
         res.status(406).json({ Errors: msgError });
