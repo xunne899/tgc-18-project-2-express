@@ -316,7 +316,7 @@ async function main() {
       //   return { skin_type: { $in: [type] } };
       // });
       criteria['skin_type'] = {
-          '$in': req.query.skin_type
+          '$all': req.query.skin_type
       }
     }
 
@@ -329,7 +329,7 @@ async function main() {
       //   return { "ingredients.oil_ingredient": { $in: [type] } };
       // });
       criteria['ingredients.oil_ingredient'] = {
-          '$in': [req.query.oil_ingredient]
+          '$all': [req.query.oil_ingredient]
       }
     }
     if (req.query.base_ingredient) {
@@ -337,7 +337,7 @@ async function main() {
       //   return { "ingredients.base_ingredient": { $in: [type] } };
       // });
       criteria['ingredients.base_ingredient'] = {
-          '$in': [req.query.base_ingredient]
+          '$all': [req.query.base_ingredient]
       }
     }
 
@@ -346,14 +346,14 @@ async function main() {
       //   return { "ingredients.milk_ingredient": { $in: [type] } };
       // });
       criteria['ingredients.milk_ingredient'] = {
-          '$in': [req.query.milk_ingredient]
+          '$all': [req.query.milk_ingredient]
       }
     }
 
     // suitability
     if (req.query.treat) {
       criteria["suitability.treat"] = {
-        $in: [req.query.treat],
+        '$in': [req.query.treat],
       };
     }
     if (req.query.recommended_use) {
