@@ -331,7 +331,7 @@ async function main() {
     //   criteria['ingredients.oil_ingredient'] = {
     //       '$all': [req.query.oil_ingredient]
     //   }
-    // }
+    }
     if (req.query.base_ingredient) {
       criteria["$all"] = req.query.base_ingredient.map((type) => {
         return { "ingredients.base_ingredient": { $in: [type] } };
@@ -339,7 +339,7 @@ async function main() {
     //   criteria['ingredients.base_ingredient'] = {
     //       '$all': [req.query.base_ingredient]
     //   }
-    // }
+    }
 
     if (req.query.milk_ingredient) {
       criteria["$all"] = req.query.milk_ingredient.map((type) => {
@@ -348,7 +348,7 @@ async function main() {
     //   criteria['ingredients.milk_ingredient'] = {
     //       '$all': [req.query.milk_ingredient]
     //   }
-    // }
+    }
 
     // suitability
     if (req.query.treat) {
