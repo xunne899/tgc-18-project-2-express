@@ -353,7 +353,7 @@ async function main() {
     // suitability
     if (req.query.treat) {
       criteria["suitability.treat"] = {
-        '$in': [req.query.treat],
+        '$all': [req.query.treat],
       };
     }
     if (req.query.recommended_use) {
