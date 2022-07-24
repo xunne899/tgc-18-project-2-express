@@ -23,6 +23,50 @@ async function main() {
   });
 
 
+
+  app.get("/soap_listings/comments/:id", async (req, res) => {
+    let _id = new ObjectId();
+    let datePosted = new Date();
+    let username = req.body.username;
+    let comment = req.body.comment;
+
+    let msgError = [];
+
+    if (typeof username !== "string") {
+      msgError.push({ userName: username + " is invalid" });
+    }
+
+    if (typeof comment !== "string") {
+      msgError.push({ comment: comment + " is invalid" });
+    }
+
+    if (msgError && msgError.length > 0) {
+      res.status(406).json({ Errors: msgError });
+    } else {
+      let result = await db.collection(SOAP).updateOne(
+        {
+          _id: ObjectId(req.params.id),
+        },
+        {
+          $push: {
+            comments: {
+              _id,
+              datePosted,
+              username,
+              comment,
+            },
+          },
+        }
+      );
+      res.status(201);
+      res.json(result);
+    }
+  });
+
+
+
+
+
   //post comments route
   app.post("/soap_listings/comments/:id", async (req, res) => {
     let _id = new ObjectId();
