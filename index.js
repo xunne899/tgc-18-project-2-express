@@ -11,7 +11,7 @@ const { ObjectId } = require("mongodb");
 app.use(cors());
 app.use(express.json());
 
-// collections defination
+// soap collections
 const SOAP = "soaps";
 
 async function main() {
@@ -22,6 +22,8 @@ async function main() {
     res.send("hello world");
   });
 
+
+  //post comments route
   app.post("/soap_listings/comments/:id", async (req, res) => {
     let _id = new ObjectId();
     let datePosted = new Date();
@@ -61,9 +63,8 @@ async function main() {
     }
   });
 
+  //post of all soap listings route
   app.post("/soap_listings", async function (req, res) {
-    //console.log(req.body.ingredients);
-
     try {
       let skinType = [];
       if (Array.isArray(req.body.skin_type)) {
@@ -80,7 +81,6 @@ async function main() {
       let color = req.body.color;
       let country_origin = req.body.country_origin;
       let cost = req.body.cost;
-      // let estimateDelivery = req.body.estimate_delivery
       let skin_type = skinType;
 
       let oil_ingredient = req.body.ingredients.oil_ingredient;
@@ -95,16 +95,7 @@ async function main() {
 
       let msgError = {};
 
-      //name
-
-      //   if (
-      //     name == undefined ||
-      //     (name.length < 3) ||
-      //     typeof name === "number"
-      //   ) {
-      //     msgError.push({ name: name + " is invalid" });
-      //   }
-      //email
+      // custom module validator for each field
       validator.validateNotEmptyString(name, "name", msgError);
       validator.validateEmail(email, msgError);
       validator.validateNotEmptyString(contact_no, "contact_no", msgError);
@@ -121,79 +112,7 @@ async function main() {
       validator.validateNotNumber(date_posted, "date_posted", msgError);
       validator.validateNotNumber(cost, "cost", msgError);
 
-      //contact no
-      //   if (contact_no == undefined || (contact_no.length < 3)) {
-      //     msgError.push({ contact_no: contact_no + " is invalid" });
-      //   }
-
-      //soap
-      //   if (
-      //     soap_label == undefined ||
-      //     (typeof soap_label !== "string")
-      //   ) {
-      //     msgError.push({ soap_label: soap_label + " is invalid" });
-      //   }
-
-      //image
-      //   if (
-      //     image_url == undefined ||
-      //     typeof (image_url) !== "string"
-      //     // !image_url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)
-      //   ) {
-      //     msgError.push({ image_url: `${image_url} is an invalid url` });
-      //   }
-
-      //color
-      //   if (color == undefined || (typeof color !== "string")) {
-      //     msgError.push({ color: color + " is invalid" });
-      //   }
-
-      //country
-      //   if (
-      //     country_origin == undefined ||
-      //     (typeof country_origin !== "string")
-      //   ) {
-      //     msgError.push({ country_origin: country_origin + " is invalid" });
-      //   }
-
-      //skin
-      //   if (skin_type == undefined || typeof skin_type !== "object") {
-      //     msgError.push({ skin_type: skin_type + " is invalid" });
-      //   }
-
-      //   //oil
-      //   if (oil_ingredient == undefined || typeof oil_ingredient !== "object") {
-      //     msgError.push({ oil_ingredient: oil_ingredient + " is invalid" });
-      //   }
-      //   //base
-      //   if (base_ingredient == undefined || typeof base_ingredient !== "object") {
-      //     msgError.push({ base_ingredient: base_ingredient + " is invalid" });
-      //   }
-      //   //milk
-      //   if (milk_ingredient == undefined || typeof milk_ingredient !== "object") {
-      //     msgError.push({ milk_ingredient: milk_ingredient + " is invalid" });
-      //   }
-      //   //treat
-      //   if (treat == undefined || typeof treat !== "object") {
-      //     msgError.push({ treat: treat + " is invalid" });
-      //   }
-      //recommend
-      //   if (
-      //     recommended_use == undefined ||
-      //     (typeof recommended_use !== "string")
-      //   ) {
-      //     msgError.push({ recommended_use: recommended_use + " is invalid" });
-      //   }
-      //date
-      //   if (
-      //     date_posted == undefined ||
-      //     (typeof date_posted !== "number")
-      //   ) {
-      //     msgError.push({ date_posted: date_posted + " is invalid" });
-      //   }
-      //console.log(msgError);
-      //msgError["recommended_use"].push("*Need to have at least 50 characters for usage description.");
-      //undefined.push <- crash
+    
       if (msgError && Object.keys(msgError).length > 0) {
         res.status(406).json({ Errors: msgError });
       } else {
@@ -206,7 +125,6 @@ async function main() {
           color: color,
           country_origin: country_origin,
           cost: cost,
-          // "estimate_delivery": estimateDelivery,
           skin_type: skin_type,
           ingredients: ingredients,
           suitability: suitability,
@@ -214,8 +132,7 @@ async function main() {
 
         res.status(201);
         res.json(result);
-        // db insert
-        // success
+        
       }
     } catch (e) {
       console.log(e);
@@ -224,15 +141,10 @@ async function main() {
     }
   });
 
+  // get soap listings route
   app.get("/soap_listings", async function (req, res) {
     let criteria = {};
 
-    //    //id
-    //    if (req.query._id) {
-    //     criteria['_id'] = {
-    //         '$regex': ObjectId(req.query._id), '$options': 'i'
-    //     }
-    // }
 
     //name
     if (req.query.name) {
@@ -256,11 +168,7 @@ async function main() {
         $regex: req.query.contact_no,
         $options: "i",
       };
-      //     , {
-      //     'projection': {
-      //         'contact_no': 1
-      //     }
-      // }
+
     }
     //soap
     if (req.query.soap_label) {
@@ -291,10 +199,7 @@ async function main() {
       };
     }
 
-    // cost
-    // min cost
-    // max cost
-
+    // min max cost
     if (req.query.min_cost && req.query.max_cost) {
       criteria["cost"] = {
         $gte: parseInt(req.query.min_cost),
@@ -312,39 +217,23 @@ async function main() {
 
     // skin type
     if (req.query.skin_type) {
-      // criteria["$and"] = req.query.skin_type.map((type) => {
-      //   return { skin_type: { $in: [type] } };
-      // });
       criteria['skin_type'] = {
           '$all': req.query.skin_type
       }
     }
-
-    //ingredients
-    // console.log(req.query.oil_ingredient)
-    // console.log(req.query.stuff)
-    //   console.log(req.query.ingredients.oil_ingredient)
+    // ingredients
     if (req.query.oil_ingredient) {
-      // criteria["$and"] = req.query.oil_ingredient.map((type) => {
-      //   return { "ingredients.oil_ingredient": { $in: [type] } };
-      // });
       criteria['ingredients.oil_ingredient'] = {
           '$all': [req.query.oil_ingredient]
       }
     }
     if (req.query.base_ingredient) {
-      // criteria["$or"] = req.query.base_ingredient.map((type) => {
-      //   return { "ingredients.base_ingredient": { $in: [type] } };
-      // });
       criteria['ingredients.base_ingredient'] = {
           '$all': [req.query.base_ingredient]
       }
     }
 
     if (req.query.milk_ingredient) {
-      // criteria["$and"] = req.query.milk_ingredient.map((type) => {
-      //   return { "ingredients.milk_ingredient": { $in: [type] } };
-      // });
       criteria['ingredients.milk_ingredient'] = {
           '$all': [req.query.milk_ingredient]
       }
@@ -381,7 +270,7 @@ async function main() {
         $options: "i",
       };
     }
-
+   // search field
     if (req.query.search) {
       criteria["$or"] = [
         {
@@ -470,7 +359,6 @@ async function main() {
         color: 1,
         country_origin: 1,
         cost: 1,
-        // "estimate_delivery": 1,
         skin_type: 1,
         ingredients: 1,
         suitability: 1,
@@ -478,11 +366,10 @@ async function main() {
       },
     });
     res.status(200);
-    //toArray is async
     res.send(await results.toArray());
   });
 
-  // get doc field id
+  // get document by field id route
   app.get("/soap_listings/:id", async function (req, res) {
     let results = await db.collection(SOAP).findOne(
       {
@@ -491,7 +378,6 @@ async function main() {
 
       {
         projection: {
-          // '_id': ObjectId(req.params.id),
           name: 1,
           email: 1,
           contact_no: 1,
@@ -500,7 +386,6 @@ async function main() {
           color: 1,
           country_origin: 1,
           cost: 1,
-          // "estimate_delivery": 1,
           skin_type: 1,
           ingredients: 1,
           suitability: 1,
@@ -510,12 +395,10 @@ async function main() {
     );
 
     res.status(200);
-
     res.send(results);
   });
 
-  //update
-  // patch vs put
+  //update put
   app.put("/soap_listings/:id", async function (req, res) {
     try {
       let skinType = [];
@@ -533,7 +416,6 @@ async function main() {
       let color = req.body.color;
       let country_origin = req.body.country_origin;
       let cost = req.body.cost;
-      // let estimateDelivery = req.body.estimate_delivery
       let skin_type = skinType;
 
       let oil_ingredient = req.body.ingredients.oil_ingredient;
@@ -585,7 +467,6 @@ async function main() {
               color: color,
               country_origin: country_origin,
               cost: cost,
-              // "estimate_delivery": estimateDelivery,
               skin_type: skin_type,
               ingredients: ingredients,
               suitability: suitability,
