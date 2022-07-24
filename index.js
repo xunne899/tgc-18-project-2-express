@@ -23,44 +23,32 @@ async function main() {
   });
 
 
+  app.get("/soap_listings/comments/:id", async function (req, res) {
+    let results = await db.collection(SOAP).findOne(
+      {
+        _id: ObjectId(req.params.id),
+      },
 
-  app.get("/soap_listings/comments/:id", async (req, res) => {
-    let _id = new ObjectId();
-    let datePosted = new Date();
-    let username = req.body.username;
-    let comment = req.body.comment;
-
-    let msgError = [];
-
-    if (typeof username !== "string") {
-      msgError.push({ userName: username + " is invalid" });
-    }
-
-    if (typeof comment !== "string") {
-      msgError.push({ comment: comment + " is invalid" });
-    }
-
-    if (msgError && msgError.length > 0) {
-      res.status(406).json({ Errors: msgError });
-    } else {
-      let result = await db.collection(SOAP).updateOne(
-        {
-          _id: ObjectId(req.params.id),
+      {
+        projection: {
+          name: 1,
+          email: 1,
+          contact_no: 1,
+          soap_label: 1,
+          image_url: 1,
+          color: 1,
+          country_origin: 1,
+          cost: 1,
+          skin_type: 1,
+          ingredients: 1,
+          suitability: 1,
+          comments: 1,
         },
-        {
-          $push: {
-            comments: {
-              _id,
-              datePosted,
-              username,
-              comment,
-            },
-          },
-        }
-      );
-      res.status(201);
-      res.json(result);
-    }
+      }
+    );
+
+    res.status(200);
+    res.send(results);
   });
 
 
