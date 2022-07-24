@@ -23,33 +23,6 @@ async function main() {
   });
 
 
-  app.get("/soap_listings/comments/:id", async function (req, res) {
-    let results = await db.collection(SOAP).findOne(
-      {
-        _id: ObjectId(req.params.id),
-      },
-
-      {
-        projection: {
-          name: 1,
-          email: 1,
-          contact_no: 1,
-          soap_label: 1,
-          image_url: 1,
-          color: 1,
-          country_origin: 1,
-          cost: 1,
-          skin_type: 1,
-          ingredients: 1,
-          suitability: 1,
-          comments: 1,
-        },
-      }
-    );
-
-    res.status(200);
-    res.send(results);
-  });
 
 
 
@@ -94,6 +67,10 @@ async function main() {
       res.json(result);
     }
   });
+
+
+
+
 
   //post of all soap listings route
   app.post("/soap_listings", async function (req, res) {
