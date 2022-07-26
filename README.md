@@ -133,3 +133,5 @@ Comments are posted and registered in mongoDB database
 
 - MongoDB - backend database
 - ExpressNodejs - programming code
+- CORS
+- dotenv 
