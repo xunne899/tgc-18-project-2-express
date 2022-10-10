@@ -7,7 +7,7 @@ const MONGO_URI = process.env.MONGO_URI;
 const app = express();
 
 const { ObjectId } = require("mongodb");
-
+// allows sharing 
 app.use(cors());
 app.use(express.json());
 
@@ -154,7 +154,7 @@ async function main() {
   app.get("/soap_listings", async function (req, res) {
     let criteria = {};
 
-
+// regex pattern matching , i case insensitivity 
     //name
     if (req.query.name) {
       criteria["name"] = {
@@ -357,7 +357,7 @@ async function main() {
         },
       ];
     }
-
+// find project field
     let results = await db.collection(SOAP).find(criteria, {
       projection: {
         name: 1,
@@ -504,6 +504,7 @@ async function main() {
 
 main();
 
+// bind listen on a specfic host 
 app.listen( process.env.PORT, function () {
   console.log("Server has started");
 });
